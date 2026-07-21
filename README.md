@@ -44,14 +44,16 @@ flowchart TD
 # Requisitos: Python 3.11+
 
 # Clonar o repositório
-git clone <repo-url>
+git clone https://github.com/WelingtonPeres/SimplexCode.git
 cd SimplexCode
 
 # Instalar dependências
-pip install matplotlib reportlab
+pip install -r requirements.txt
 ```
 
 ## Como Usar
+
+![SimplexCode - Interface](img/image.png)
 
 ```bash
 # Executar a aplicação
