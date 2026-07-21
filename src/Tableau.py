@@ -29,6 +29,8 @@ class Tableau:
         self.linha_pivo = None
         self.coluna_saida = None
         self.descricao = "Tableau inicial"
+        self.operacoes_linha = []
+        self.razoes_info = []
         
 
     def __identificar_coluna_pivo(self):
@@ -54,10 +56,15 @@ class Tableau:
         melhor_razao = None
         melhor_col_basica = None
 
+        razoes = []
+        candidatos = []
+
         for i in range(n_restricoes):
-            if self.tableau[i][coluna_pivo] > 0:
-                razao = self.tableau[i][-1] / self.tableau[i][coluna_pivo]
+            coef = self.tableau[i][coluna_pivo]
+            if coef > 0:
+                razao = self.tableau[i][-1] / coef
                 col_basica = next(col for col, row in self.variaveis_basicas if row == i)
+                candidatos.append((i, razao, col_basica, coef))
                 if (
                     melhor_razao is None
                     or razao < melhor_razao
@@ -66,6 +73,17 @@ class Tableau:
                     melhor_razao = razao
                     melhor_linha = i
                     melhor_col_basica = col_basica
+            elif coef == 0:
+                razoes.append(f"L{i}: coef = 0 (ignorada)")
+            else:
+                razoes.append(f"L{i}: coef < 0 (ignorada)")
+
+        for i, razao, col_basica, coef in candidatos:
+            is_melhor = (i == melhor_linha)
+            razoes.append(
+                f"L{i}: {self.tableau[i][-1]} / {coef} = {razao:.4f}"
+                + ("  ← menor" if is_melhor else "")
+            )
 
         if melhor_linha == -1:
             raise ValueError(
@@ -73,6 +91,7 @@ class Tableau:
                 "sao nao-positivos nas linhas de restricao."
             )
 
+        self.razoes_info = razoes
         return melhor_linha
 
     def __montar_tableau(self):
@@ -163,14 +182,26 @@ class Tableau:
             raise ValueError("Elemento pivo eh zero, nao eh possivel realizar a iteracao.")
         if elemento_pivo < 0:
             raise ValueError("Elemento pivo eh negativo, nao eh possivel realizar a iteracao.")
+
+        operacoes = []
+
         if elemento_pivo != 1:
-            self.tableau[linha_pivo] = [c / elemento_pivo for c in self.tableau[linha_pivo]] # Normaliza linha
+            self.tableau[linha_pivo] = [c / elemento_pivo for c in self.tableau[linha_pivo]]
+            operacoes.append(f"L{linha_pivo} ← L{linha_pivo} / {elemento_pivo}")
 
         for i in range(len(self.tableau)):
-            
             if i != linha_pivo:
-                razao = self.tableau[i][coluna_pivo]
-                self.tableau[i] = [c - razao * c_pivo for c, c_pivo in zip(self.tableau[i], self.tableau[linha_pivo])] # linha_i <- linha_i - (c * linha_pivo)
+                coef = self.tableau[i][coluna_pivo]
+                if coef != 0:
+                    self.tableau[i] = [
+                        c - coef * c_pivo
+                        for c, c_pivo in zip(self.tableau[i], self.tableau[linha_pivo])
+                    ]
+                    sinal = "-" if coef > 0 else "+"
+                    op_str = f"L{i} ← L{i} {sinal} {abs(coef)} × L{linha_pivo}"
+                    if elemento_pivo != 1:
+                        op_str += f"  (L{linha_pivo} já normalizada por / {elemento_pivo})"
+                    operacoes.append(op_str)
 
         coluna_saida = None
         for col, row in self.variaveis_basicas:
@@ -186,12 +217,13 @@ class Tableau:
         self.coluna_entrada = coluna_pivo
         self.linha_pivo = linha_pivo
         self.coluna_saida = coluna_saida
+        self.operacoes_linha = operacoes
 
     def realizar_iteracao(self):
         coluna_pivo = self.__identificar_coluna_pivo()
         linha_pivo = self.__identificar_linha_pivo(coluna_pivo)
         self._realizar_pivo(coluna_pivo, linha_pivo)
-        self.descricao = "Iteracao"
+        self.descricao = "Iteracao do Simplex"
         return self
 
     def transitar_para_fase_ii(self, indices_artificiais: list[int]):

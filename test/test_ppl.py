@@ -3,7 +3,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from PPL import PPL, PrintPPL
+from src.PPL import PPL, PrintPPL
 
 
 class TestPrintPPL(unittest.TestCase):

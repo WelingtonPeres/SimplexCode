@@ -1,7 +1,7 @@
 import copy
 
-from PPL import PPL
-from Tableau import Tableau
+from src.PPL import PPL
+from src.Tableau import Tableau
 
 
 class Simplex:

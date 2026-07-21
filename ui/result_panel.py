@@ -30,13 +30,34 @@ class ResultPanel(tk.Frame):
         )
         self._z_label.pack(pady=(5, 15))
 
+        btn_frame = tk.Frame(self, bg="#F0F0F0")
+        btn_frame.pack()
+
+        self._btn_grafico = tk.Button(
+            btn_frame, text="Solução Gráfica",
+            font=("Helvetica", 11, "bold"), bg="#FF9800", fg="white",
+            padx=20, pady=6, border=0, cursor="hand2",
+            activebackground="#F57C00",
+            command=lambda: self.app.abrir_grafico(),
+        )
+        self._btn_grafico.pack(side=tk.LEFT, padx=5)
+
         tk.Button(
-            self, text="Novo Problema",
+            btn_frame, text="Exportar PDF",
+            font=("Helvetica", 11, "bold"), bg="#607D8B", fg="white",
+            padx=20, pady=6, border=0, cursor="hand2",
+            activebackground="#455A64",
+            command=lambda: self.app.exportar_pdf(),
+        ).pack(side=tk.LEFT, padx=5)
+
+        self._btn_novo = tk.Button(
+            btn_frame, text="Novo Problema",
             font=("Helvetica", 11, "bold"), bg="#4CAF50", fg="white",
             padx=25, pady=8, border=0, cursor="hand2",
             activebackground="#45a049",
             command=lambda: self.app._mostrar_frame("input"),
-        ).pack()
+        )
+        self._btn_novo.pack(side=tk.LEFT, padx=5)
 
     def carregar(self, simplex):
         for w in self._tabela_frame.winfo_children():
@@ -83,3 +104,8 @@ class ResultPanel(tk.Frame):
                 solucao["valor_objetivo"], float
             ) else f"Z = {solucao['valor_objetivo']}",
         )
+
+        if simplex.ppl.n_variaveis == 2:
+            self._btn_grafico.config(state=tk.NORMAL)
+        else:
+            self._btn_grafico.config(state=tk.DISABLED)

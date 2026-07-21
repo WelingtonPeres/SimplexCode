@@ -3,7 +3,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from Tableau import Tableau
+from src.Tableau import Tableau
 
 
 class TestIdentificarVariaveisBasicas(unittest.TestCase):
