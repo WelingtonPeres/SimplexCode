@@ -1,0 +1,5 @@
+.docs/
+.fontes/
+.plan/
+__pycache__/
+*.pyc
