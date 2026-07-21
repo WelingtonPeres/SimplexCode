@@ -87,18 +87,25 @@ class ResultPanel(tk.Frame):
             font=("Helvetica", 10, "bold"), width=12, relief="ridge",
         ).grid(row=0, column=1, sticky="nsew")
 
+        grid_row = 0
         for i in range(n):
+            val = solucao["variaveis"][i]
+            if isinstance(val, float) and abs(val) < 1e-9:
+                continue
+            if val == 0:
+                continue
+
+            grid_row += 1
             tk.Label(
                 self._tabela_frame, text=f"x{i+1}",
                 bg="#ECECEC", width=10, relief="ridge",
-            ).grid(row=i + 1, column=0, sticky="nsew")
+            ).grid(row=grid_row, column=0, sticky="nsew")
 
-            val = solucao["variaveis"][i]
             texto = f"{math.trunc(val * 10000) / 10000:.4f}" if isinstance(val, float) else str(val)
             tk.Label(
                 self._tabela_frame, text=texto,
                 bg="white", width=12, relief="ridge",
-            ).grid(row=i + 1, column=1, sticky="nsew")
+            ).grid(row=grid_row, column=1, sticky="nsew")
 
         self._z_label.config(
             text=f"Z = {math.trunc(solucao['valor_objetivo'] * 10000) / 10000:.4f}" if isinstance(

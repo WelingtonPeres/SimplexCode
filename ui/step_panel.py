@@ -251,6 +251,25 @@ class StepPanel(tk.Frame):
         cell_h = 28
         vb_w = 52
         label_w = 34
+        font_size = 9
+        header_font_size = 9
+        text_cut = 8
+
+        if n_cols > 8:
+            cell_w = 60
+            font_size = 8
+            header_font_size = 8
+            text_cut = 7
+        if n_cols > 12:
+            cell_w = 50
+            font_size = 7
+            header_font_size = 7
+            text_cut = 6
+        if n_cols > 18:
+            cell_w = 42
+            font_size = 6
+            header_font_size = 6
+            text_cut = 5
 
         n_restricoes = len(t.tableau) - (
             2 if t._funcao_objetivo_artificial is not None else 1
@@ -288,7 +307,7 @@ class StepPanel(tk.Frame):
         )
         self._canvas.create_text(
             _x_vb() + vb_w / 2, header_y + cell_h / 2,
-            text="VB", font=("Courier", 9, "bold"), fill=TEXT_COLOR,
+            text="VB", font=("Courier", header_font_size, "bold"), fill=TEXT_COLOR,
         )
 
         self._canvas.create_rectangle(
@@ -297,7 +316,7 @@ class StepPanel(tk.Frame):
         )
         self._canvas.create_text(
             _x_label() + label_w / 2, header_y + cell_h / 2,
-            text="#", font=("Courier", 9, "bold"), fill=TEXT_COLOR,
+            text="#", font=("Courier", header_font_size, "bold"), fill=TEXT_COLOR,
         )
 
         for j, h in enumerate(headers_display):
@@ -308,7 +327,7 @@ class StepPanel(tk.Frame):
             )
             self._canvas.create_text(
                 x + cell_w / 2, header_y + cell_h / 2,
-                text=str(h)[:8], font=("Courier", 9, "bold"), fill=TEXT_COLOR,
+                text=str(h)[:text_cut], font=("Courier", header_font_size, "bold"), fill=TEXT_COLOR,
             )
 
         # --- Data rows ---
@@ -326,7 +345,7 @@ class StepPanel(tk.Frame):
             )
             self._canvas.create_text(
                 _x_vb() + vb_w / 2, y + cell_h / 2,
-                text=vb_name[:6], font=("Courier", 9), fill=TEXT_COLOR,
+                text=vb_name[:6], font=("Courier", font_size), fill=TEXT_COLOR,
             )
 
             if i < n_restricoes:
@@ -348,7 +367,7 @@ class StepPanel(tk.Frame):
             )
             self._canvas.create_text(
                 _x_label() + label_w / 2, y + cell_h / 2,
-                text=row_label, font=("Courier", 9, "bold"), fill=label_color,
+                text=row_label, font=("Courier", font_size, "bold"), fill=label_color,
             )
 
             for j, val in enumerate(row):
@@ -402,7 +421,7 @@ class StepPanel(tk.Frame):
                     text = f"{math.trunc(val * 10000) / 10000:.4f}"
                 self._canvas.create_text(
                     x + cell_w / 2, y + cell_h / 2,
-                    text=text[:10], font=("Courier", 9), fill=fg,
+                    text=text[:text_cut], font=("Courier", font_size), fill=fg,
                 )
 
         self._canvas.configure(scrollregion=(

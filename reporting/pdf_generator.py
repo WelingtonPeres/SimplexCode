@@ -220,6 +220,10 @@ def gerar_relatorio(caminho_arquivo, ppl, simplex, dados_originais):
     else:
         dados_tabela = [["Variável", "Valor"]]
         for i, val in enumerate(sol["variaveis"]):
+            if isinstance(val, float) and abs(val) < 1e-9:
+                continue
+            if val == 0:
+                continue
             dados_tabela.append([f"x{i+1}", f"{math.trunc(val * 10000) / 10000:.4f}"])
         dados_tabela.append(["Z*", f"{math.trunc(sol['valor_objetivo'] * 10000) / 10000:.4f}"])
 
@@ -347,10 +351,18 @@ def _criar_tabela_tableau(tableau, largura_total):
     col_width = largura_total / (n_cols + 2)
     col_widths = [1.2 * col_width, 0.7 * col_width] + [col_width] * n_cols
 
+    font_size = 8
+    if n_cols > 8:
+        font_size = 7
+    if n_cols > 12:
+        font_size = 6
+    if n_cols > 18:
+        font_size = 5
+
     t = Table(data, colWidths=col_widths)
     style_commands = [
         ("GRID", (0, 0), (-1, -1), 0.5, _hex("#BDBDBD")),
-        ("FONTSIZE", (0, 0), (-1, -1), 8),
+        ("FONTSIZE", (0, 0), (-1, -1), font_size),
         ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
         ("FONTNAME", (0, 1), (-1, -1), "Courier"),
         ("ALIGN", (0, 0), (-1, -1), "CENTER"),

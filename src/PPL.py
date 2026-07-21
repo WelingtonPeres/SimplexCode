@@ -66,15 +66,21 @@ class PPL:
         self._fo_invertida = False
 
         self.PPLno_forma_base = PrintPPL(
-            self.matriz_coeficientes, self.vetor_b, self.vetor_sinais,
-            self.funcao_objetivo, self.tipo_problema
+            self.matriz_coeficientes, 
+            self.vetor_b, 
+            self.vetor_sinais,
+            self.funcao_objetivo, 
+            self.tipo_problema
         )
 
         self.__converter_para_forma_base()
 
         self.PPLforma_base = PrintPPL(
-            self.matriz_coeficientes, self.vetor_b, self.vetor_sinais,
-            self.funcao_objetivo, self.tipo_problema
+            self.matriz_coeficientes, 
+            self.vetor_b, 
+            self.vetor_sinais,
+            self.funcao_objetivo, 
+            self.tipo_problema
         )
 
     def PrintarPoblema(self, base: bool = False):
@@ -153,7 +159,7 @@ class PPL:
         # Quando o problema é de duas etapas, cria-se a função objetivo artificial
         if self.eh_DuasEtapas:
             self.funcao_objetivo_artificial = [0] * len(self.funcao_objetivo)
-            for idx in self.indices_artificiais:
-                self.funcao_objetivo_artificial[idx] = 1 # Cria z' = a1 + a2 + ... + am, onde ai são as variáveis artificiais
+            for i in self.indices_artificiais:
+                self.funcao_objetivo_artificial[i] = 1 # Cria z' = a1 + a2 + ... + am, onde ai são as variáveis artificiais
 
         self.EstaBase = True
