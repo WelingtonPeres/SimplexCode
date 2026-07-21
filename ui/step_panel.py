@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import math
 
 FASE_I_COLOR = "#D4E6F1"
 FASE_II_COLOR = "#D5F5E3"
@@ -185,6 +186,8 @@ class StepPanel(tk.Frame):
                 t.linha_pivo < len(t.tableau)
                 and t.coluna_entrada < len(t.tableau[t.linha_pivo])
             ) else "?"
+            if isinstance(pivo, float):
+                pivo = f"{math.trunc(pivo * 10000) / 10000:.4f}"
             info_text += f"  |  Entra: {entra}  |  Sai: {sai}  |  Pivo: {pivo}"
 
         self._info.config(text=info_text)
@@ -396,7 +399,7 @@ class StepPanel(tk.Frame):
 
                 text = str(val)
                 if isinstance(val, float):
-                    text = f"{val:.2f}"
+                    text = f"{math.trunc(val * 10000) / 10000:.4f}"
                 self._canvas.create_text(
                     x + cell_w / 2, y + cell_h / 2,
                     text=text[:10], font=("Courier", 9), fill=fg,

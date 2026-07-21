@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import math
 
 
 class ResultPanel(tk.Frame):
@@ -93,14 +94,14 @@ class ResultPanel(tk.Frame):
             ).grid(row=i + 1, column=0, sticky="nsew")
 
             val = solucao["variaveis"][i]
-            texto = f"{val:.4f}" if isinstance(val, float) else str(val)
+            texto = f"{math.trunc(val * 10000) / 10000:.4f}" if isinstance(val, float) else str(val)
             tk.Label(
                 self._tabela_frame, text=texto,
                 bg="white", width=12, relief="ridge",
             ).grid(row=i + 1, column=1, sticky="nsew")
 
         self._z_label.config(
-            text=f"Z = {solucao['valor_objetivo']:.4f}" if isinstance(
+            text=f"Z = {math.trunc(solucao['valor_objetivo'] * 10000) / 10000:.4f}" if isinstance(
                 solucao["valor_objetivo"], float
             ) else f"Z = {solucao['valor_objetivo']}",
         )

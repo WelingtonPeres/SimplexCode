@@ -1,5 +1,6 @@
 import io
 from datetime import datetime
+import math
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
@@ -219,8 +220,8 @@ def gerar_relatorio(caminho_arquivo, ppl, simplex, dados_originais):
     else:
         dados_tabela = [["Variável", "Valor"]]
         for i, val in enumerate(sol["variaveis"]):
-            dados_tabela.append([f"x{i+1}", f"{val:.4f}"])
-        dados_tabela.append(["Z*", f"{sol['valor_objetivo']:.4f}"])
+            dados_tabela.append([f"x{i+1}", f"{math.trunc(val * 10000) / 10000:.4f}"])
+        dados_tabela.append(["Z*", f"{math.trunc(sol['valor_objetivo'] * 10000) / 10000:.4f}"])
 
         t = Table(dados_tabela, colWidths=[6 * cm, 6 * cm])
         t.setStyle(TableStyle([
@@ -296,7 +297,10 @@ def _criar_tabela_tableau(tableau, largura_total):
         text_colors_row = [rl_colors.black, rl_colors.black]
 
         for j, val in enumerate(row):
-            display_row.append(str(val))
+            if isinstance(val, float):
+                display_row.append(f"{math.trunc(val * 10000) / 10000:.4f}")
+            else:
+                display_row.append(str(val))
             is_last = (j == len(row) - 1)
 
             if i < n_restricoes:

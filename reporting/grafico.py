@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 def calcular_vertices(matriz_coeficientes, vetor_b, vetor_sinais):
@@ -150,7 +151,7 @@ def plotar_grafico(ax, dados, vertices, caminho, indice, solucao=None):
             z_val = fo[0] * vx_v + fo[1] * vy_v
             ax.plot(vx_v, vy_v, "o", color="#757575", markersize=6)
             ax.annotate(
-                f"({vx_v:.2f}, {vy_v:.2f})\nZ={z_val:.2f}",
+                f"({math.trunc(vx_v*10000)/10000:.4f}, {math.trunc(vy_v*10000)/10000:.4f})\nZ={math.trunc(z_val*10000)/10000:.4f}",
                 (vx_v, vy_v),
                 textcoords="offset points",
                 xytext=(8, 8),
